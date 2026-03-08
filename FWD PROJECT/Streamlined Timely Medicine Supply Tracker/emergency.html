@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Emergency contact and allergy information for medicine tracker">
+  <title>Emergency Information - MediTrack</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="nav-header">
+    <div class="nav-container">
+      <a href="index.html" class="logo">MediTrack</a>
+      <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle navigation menu">☰</button>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="tracker.html">Medicine Tracker</a></li>
+        <li><a href="emergency.html" class="active">Emergency Info</a></li>
+        <li><a href="reports.html">Reports</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header class="header">
+      <h1>🚨 Emergency Information</h1>
+      <p>Critical information for emergencies</p>
+    </header>
+
+    <main class="content">
+      <!-- Course Outcome 2: Forms -->
+      <section class="emergency-section">
+        <h2 style="color: #cc0000; margin-bottom: 20px;">Emergency Contacts</h2>
+        <form id="emergencyForm" class="form-section" style="background: white;">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="primaryContact">Primary Emergency Contact *</label>
+              <!-- Course Outcome 2: Input types and validation -->
+              <input type="text" 
+                     id="primaryContact" 
+                     placeholder="Name" 
+                     required
+                     aria-required="true">
+            </div>
+            
+            <div class="form-group">
+              <label for="primaryPhone">Contact Number *</label>
+              <!-- Course Outcome 2: Input types - tel -->
+              <input type="tel" 
+                     id="primaryPhone" 
+                     placeholder="(123) 456-7890" 
+                     pattern="[0-9\(\)\-\s\+]+"
+                     required
+                     aria-required="true">
+            </div>
+            
+            <div class="form-group">
+              <label for="relationship">Relationship</label>
+              <select id="relationship" aria-label="Relationship to emergency contact">
+                <option value="">Select...</option>
+                <option value="spouse">Spouse</option>
+                <option value="parent">Parent</option>
+                <option value="sibling">Sibling</option>
+                <option value="child">Child</option>
+                <option value="friend">Friend</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="secondaryContact">Secondary Contact</label>
+              <input type="text" id="secondaryContact" placeholder="Name">
+            </div>
+            
+            <div class="form-group">
+              <label for="secondaryPhone">Secondary Number</label>
+              <input type="tel" 
+                     id="secondaryPhone" 
+                     placeholder="(123) 456-7890"
+                     pattern="[0-9\(\)\-\s\+]+">
+            </div>
+            
+            <div class="form-group">
+              <label for="doctorName">Primary Doctor</label>
+              <input type="text" id="doctorName" placeholder="Dr. Smith">
+            </div>
+            
+            <div class="form-group">
+              <label for="doctorPhone">Doctor's Phone</label>
+              <input type="tel" 
+                     id="doctorPhone" 
+                     placeholder="(123) 456-7890"
+                     pattern="[0-9\(\)\-\s\+]+">
+            </div>
+            
+            <div class="form-group">
+              <label for="hospitalPreference">Preferred Hospital</label>
+              <input type="text" id="hospitalPreference" placeholder="City General Hospital">
+            </div>
+            
+            <div class="form-group full-width">
+              <label for="insuranceInfo">Insurance Information</label>
+              <textarea id="insuranceInfo" 
+                        placeholder="Policy number, provider name, etc."
+                        rows="3"></textarea>
+            </div>
+          </div>
+          
+          <button type="submit" class="btn">💾 Save Emergency Contacts</button>
+        </form>
+      </section>
+
+      <!-- Allergies Section -->
+      <section class="form-section" style="background: #fff3e6; border-color: #ffb366;">
+        <h2 style="color: #cc6600;">⚠️ Allergies & Medical Conditions</h2>
+        <form id="allergiesForm">
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label for="drugAllergies">Drug Allergies</label>
+              <textarea id="drugAllergies" 
+                        placeholder="List all drug allergies (e.g., Penicillin, Aspirin)"
+                        rows="3"></textarea>
+            </div>
+            
+            <div class="form-group full-width">
+              <label for="foodAllergies">Food Allergies</label>
+              <textarea id="foodAllergies" 
+                        placeholder="List food allergies (e.g., Peanuts, Shellfish)"
+                        rows="3"></textarea>
+            </div>
+            
+            <div class="form-group full-width">
+              <label for="medicalConditions">Chronic Medical Conditions</label>
+              <textarea id="medicalConditions" 
+                        placeholder="Diabetes, Heart Disease, Asthma, etc."
+                        rows="3"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label for="bloodType">Blood Type</label>
+              <select id="bloodType">
+                <option value="">Select...</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="organDonor">Organ Donor Status</label>
+              <select id="organDonor">
+                <option value="">Select...</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+                <option value="undecided">Undecided</option>
+              </select>
+            </div>
+            
+            <div class="form-group full-width">
+              <label for="additionalNotes">Additional Medical Notes</label>
+              <textarea id="additionalNotes" 
+                        placeholder="Any other important medical information"
+                        rows="3"></textarea>
+            </div>
+          </div>
+          
+          <button type="submit" class="btn">💾 Save Allergy Information</button>
+        </form>
+      </section>
+
+      <!-- Display Saved Information -->
+      <section class="form-section" id="displaySection" style="display: none;">
+        <h2>📋 Saved Information</h2>
+        <div id="savedInfo" style="line-height: 1.8;"></div>
+        <button onclick="printEmergencyCard()" class="btn" style="margin-top: 15px;">🖨️ Print Emergency Card</button>
+      </section>
+    </main>
+    
+  <script type="module">
+    // Course Outcome 3: Objects
+    let emergencyData = {
+      contacts: {},
+      medical: {}
+    };
+
+    // Course Outcome 3: Functions
+    function loadSavedData() {
+      try {
+        // Course Outcome 4: Browser storage
+        const contacts = JSON.parse(localStorage.getItem('emergencyContacts') || '{}');
+        const medical = JSON.parse(localStorage.getItem('medicalInfo') || '{}');
+        
+        emergencyData = { contacts, medical };
+        
+        // Course Outcome 3: Conditions - populate form fields
+        if (contacts.primaryContact) {
+          document.getElementById('primaryContact').value = contacts.primaryContact || '';
+          document.getElementById('primaryPhone').value = contacts.primaryPhone || '';
+          document.getElementById('relationship').value = contacts.relationship || '';
+          document.getElementById('secondaryContact').value = contacts.secondaryContact || '';
+          document.getElementById('secondaryPhone').value = contacts.secondaryPhone || '';
+          document.getElementById('doctorName').value = contacts.doctorName || '';
+          document.getElementById('doctorPhone').value = contacts.doctorPhone || '';
+          document.getElementById('hospitalPreference').value = contacts.hospitalPreference || '';
+          document.getElementById('insuranceInfo').value = contacts.insuranceInfo || '';
+        }
+        
+        if (medical.drugAllergies) {
+          document.getElementById('drugAllergies').value = medical.drugAllergies || '';
+          document.getElementById('foodAllergies').value = medical.foodAllergies || '';
+          document.getElementById('medicalConditions').value = medical.medicalConditions || '';
+          document.getElementById('bloodType').value = medical.bloodType || '';
+          document.getElementById('organDonor').value = medical.organDonor || '';
+          document.getElementById('additionalNotes').value = medical.additionalNotes || '';
+        }
+        
+        displaySavedInfo();
+      } catch (error) {
+        // Course Outcome 5: Exception handling
+        console.error('Error loading emergency data:', error);
+      }
+    }
+
+    // Course Outcome 5: Form validation with JavaScript
+    function validateEmergencyForm(data) {
+      const errors = [];
+      
+      if (!data.primaryContact || data.primaryContact.trim().length < 2) {
+        errors.push('Primary contact name is required');
+      }
+      
+      if (!data.primaryPhone || data.primaryPhone.trim().length < 10) {
+        errors.push('Valid primary phone number is required');
+      }
+      
+      return errors;
+    }
+
+    // Course Outcome 4: Event handling
+    document.getElementById('emergencyForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Course Outcome 5: Handling user input dynamically
+      const formData = {
+        primaryContact: document.getElementById('primaryContact').value,
+        primaryPhone: document.getElementById('primaryPhone').value,
+        relationship: document.getElementById('relationship').value,
+        secondaryContact: document.getElementById('secondaryContact').value,
+        secondaryPhone: document.getElementById('secondaryPhone').value,
+        doctorName: document.getElementById('doctorName').value,
+        doctorPhone: document.getElementById('doctorPhone').value,
+        hospitalPreference: document.getElementById('hospitalPreference').value,
+        insuranceInfo: document.getElementById('insuranceInfo').value
+      };
+      
+      const errors = validateEmergencyForm(formData);
+      if (errors.length > 0) {
+        alert('Validation Errors:\n' + errors.join('\n'));
+        return;
+      }
+      
+      try {
+        localStorage.setItem('emergencyContacts', JSON.stringify(formData));
+        emergencyData.contacts = formData;
+        alert('✅ Emergency contacts saved successfully!');
+        displaySavedInfo();
+      } catch (error) {
+        console.error('Error saving emergency contacts:', error);
+        alert('❌ Failed to save emergency contacts');
+      }
+    });
+
+    document.getElementById('allergiesForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = {
+        drugAllergies: document.getElementById('drugAllergies').value,
+        foodAllergies: document.getElementById('foodAllergies').value,
+        medicalConditions: document.getElementById('medicalConditions').value,
+        bloodType: document.getElementById('bloodType').value,
+        organDonor: document.getElementById('organDonor').value,
+        additionalNotes: document.getElementById('additionalNotes').value
+      };
+      
+      try {
+        localStorage.setItem('medicalInfo', JSON.stringify(formData));
+        emergencyData.medical = formData;
+        alert('✅ Medical information saved successfully!');
+        displaySavedInfo();
+      } catch (error) {
+        console.error('Error saving medical info:', error);
+        alert('❌ Failed to save medical information');
+      }
+    });
+
+    // Course Outcome 4: DOM manipulation
+    function displaySavedInfo() {
+      const { contacts, medical } = emergencyData;
+      const displaySection = document.getElementById('displaySection');
+      const savedInfo = document.getElementById('savedInfo');
+      
+      // Course Outcome 3: Conditions
+      if (Object.keys(contacts).length === 0 && Object.keys(medical).length === 0) {
+        displaySection.style.display = 'none';
+        return;
+      }
+      
+      displaySection.style.display = 'block';
+      
+      // Course Outcome 3: Template literals
+      let html = '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">';
+      
+      if (contacts.primaryContact) {
+        html += `
+          <div>
+            <h3 style="color: var(--primary-color); margin-bottom: 10px;">Emergency Contacts</h3>
+            <p><strong>Primary:</strong> ${contacts.primaryContact}</p>
+            <p><strong>Phone:</strong> ${contacts.primaryPhone}</p>
+            ${contacts.relationship ? `<p><strong>Relationship:</strong> ${contacts.relationship}</p>` : ''}
+            ${contacts.secondaryContact ? `<p><strong>Secondary:</strong> ${contacts.secondaryContact}</p>` : ''}
+            ${contacts.secondaryPhone ? `<p><strong>Phone:</strong> ${contacts.secondaryPhone}</p>` : ''}
+            ${contacts.doctorName ? `<p><strong>Doctor:</strong> ${contacts.doctorName}</p>` : ''}
+            ${contacts.doctorPhone ? `<p><strong>Doctor Phone:</strong> ${contacts.doctorPhone}</p>` : ''}
+          </div>
+        `;
+      }
+      
+      if (medical.drugAllergies || medical.bloodType) {
+        html += `
+          <div>
+            <h3 style="color: #cc6600; margin-bottom: 10px;">Medical Information</h3>
+            ${medical.bloodType ? `<p><strong>Blood Type:</strong> ${medical.bloodType}</p>` : ''}
+            ${medical.drugAllergies ? `<p><strong>Drug Allergies:</strong> ${medical.drugAllergies}</p>` : ''}
+            ${medical.foodAllergies ? `<p><strong>Food Allergies:</strong> ${medical.foodAllergies}</p>` : ''}
+            ${medical.medicalConditions ? `<p><strong>Conditions:</strong> ${medical.medicalConditions}</p>` : ''}
+          </div>
+        `;
+      }
+      
+      html += '</div>';
+      savedInfo.innerHTML = html;
+    }
+
+    // Course Outcome 3: Arrow functions
+    const printEmergencyCard = () => {
+      window.print();
+    };
+
+    const toggleMenu = () => {
+      const menu = document.getElementById('navMenu');
+      menu.classList.toggle('active');
+    };
+
+    // Make functions globally accessible
+    window.printEmergencyCard = printEmergencyCard;
+    window.toggleMenu = toggleMenu;
+
+    // Load data on page load
+    window.addEventListener('load', loadSavedData);
+  </script>
+</body>
+</html>

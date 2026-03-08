@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Course Outcome 1: HTML Document Structure -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Course Outcome 5: SEO meta tags -->
+  <meta name="description" content="Advanced personal medicine tracker with reminders, stock tracking, and interaction warnings">
+  <meta name="keywords" content="medicine tracker, medication reminder, health app, prescription manager">
+  <meta name="author" content="Health Tracker Team">
+  
+  <title>Medicine Tracker - Home</title>
+  
+  <!-- Course Outcome 1: External CSS -->
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <!-- Course Outcome 2: Semantic tags - nav -->
+  <nav class="nav-header">
+    <div class="nav-container">
+      <!-- Course Outcome 1: Links -->
+      <a href="index.html" class="logo">MediTrack</a>
+      
+      <!-- Mobile menu toggle -->
+      <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle navigation menu">☰</button>
+      
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="tracker.html">Medicine Tracker</a></li>
+        <li><a href="emergency.html">Emergency Info</a></li>
+        <li><a href="reports.html">Reports</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Course Outcome 2: Semantic tags - main, section -->
+    <main class="content">
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <!-- Course Outcome 1: Headings -->
+        <h1>Welcome to MediTrack</h1>
+        <p>Your personal medicine management system</p>
+        <div class="hero-buttons">
+          <a href="tracker.html" class="hero-btn hero-btn-primary">Start Tracking</a>
+          <a href="emergency.html" class="hero-btn hero-btn-secondary">Emergency Info</a>
+        </div>
+      </section>
+
+      <!-- Stats Section -->
+      <section class="stats-section" id="statsSection">
+        <div class="stat-card">
+          <span class="stat-number" id="totalMeds">0</span>
+          <span class="stat-label">Total Medicines</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="takenToday">0</span>
+          <span class="stat-label">Taken Today</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="pendingMeds">0</span>
+          <span class="stat-label">Pending</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="completionRate">0%</span>
+          <span class="stat-label">Completion Rate</span>
+        </div>
+      </section>
+
+      <!-- Features Section with CSS Grid (CO2) -->
+      <section class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📋</div>
+          <h3>Medicine Tracking</h3>
+          <!-- Course Outcome 1: Paragraphs -->
+          <p>Track all your daily medications with scheduled times and dosages. Never miss a dose again.</p>
+          <a href="tracker.html" class="btn" style="margin-top: 15px;">Go to Tracker</a>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">🚨</div>
+          <h3>Emergency Info</h3>
+          <p>Store emergency contacts and allergy information for quick access.</p>
+          <a href="emergency.html" class="btn" style="margin-top: 15px;">Set Up</a>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Progress Reports</h3>
+          <p>View detailed reports and analytics about your medication adherence.</p>
+          <a href="reports.html" class="btn" style="margin-top: 15px;">View Reports</a>
+        </div>
+      </section>
+
+      <!-- Quick Access Section -->
+      <section class="form-section">
+        <h2>Quick Start Guide</h2>
+        <ol style="line-height: 2; margin-left: 20px;">
+          <li>Set up your <a href="emergency.html" style="color: var(--primary-color); font-weight: 600;">emergency information</a></li>
+          <li>Add your medicines in the <a href="tracker.html" style="color: var(--primary-color); font-weight: 600;">tracker</a></li>
+          <li>Enable browser notifications for reminders</li>
+          <li>Mark medicines as taken throughout the day</li>
+          <li>Check your <a href="reports.html" style="color: var(--primary-color); font-weight: 600;">progress reports</a> weekly</li>
+        </ol>
+      </section>
+    </main>
+
+  
+   
+
+  <!-- Course Outcome 5: ES6 modules -->
+  <script type="module">
+    // Course Outcome 3: JavaScript Fundamentals
+    // Course Outcome 4: Browser storage
+    function updateStats() {
+      try {
+        const medicines = JSON.parse(localStorage.getItem('medicines') || '[]');
+        const total = medicines.length;
+        const taken = medicines.filter(m => m.taken).length;
+        const pending = total - taken;
+        const completionRate = total > 0 ? Math.round((taken / total) * 100) : 0;
+        
+        // Course Outcome 4: DOM manipulation
+        document.getElementById('totalMeds').textContent = total;
+        document.getElementById('takenToday').textContent = taken;
+        document.getElementById('pendingMeds').textContent = pending;
+        document.getElementById('completionRate').textContent = completionRate + '%';
+      } catch (error) {
+        // Course Outcome 5: Exception handling
+        console.error('Error loading stats:', error);
+      }
+    }
+    
+    // Course Outcome 3: Arrow functions
+    const toggleMenu = () => {
+      const menu = document.getElementById('navMenu');
+      menu.classList.toggle('active');
+    };
+    
+    // Make function globally accessible
+    window.toggleMenu = toggleMenu;
+    
+    // Course Outcome 4: Event handling
+    window.addEventListener('load', () => {
+      updateStats();
+      
+      // Course Outcome 4: Storage events - update stats when data changes
+      window.addEventListener('storage', updateStats);
+    });
+  </script>
+</body>
+</html>

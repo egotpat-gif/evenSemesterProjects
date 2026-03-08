@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Track your daily medicines with reminders and interaction warnings">
+  <title>Medicine Tracker - MediTrack</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="nav-header">
+    <div class="nav-container">
+      <a href="index.html" class="logo"> MediTrack</a>
+      <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle navigation menu">☰</button>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="tracker.html" class="active">Medicine Tracker</a></li>
+        <li><a href="emergency.html">Emergency Info</a></li>
+        <li><a href="reports.html">Reports</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header class="header">
+      <h1>Daily Medicine Tracker</h1>
+      <p>Stay on track with your medication schedule</p>
+      <div class="weather-widget" id="weatherWidget" role="status" aria-live="polite">
+        <span id="weatherIcon">☀️</span>
+        <span id="weatherTemp">Loading...</span>
+      </div>
+    </header>
+
+    <main class="content">
+      <div id="interactionWarning" role="alert" aria-live="assertive"></div>
+      
+      <div class="progress-section">
+        <div class="progress-header">
+          <h3>Today's Progress</h3>
+          <span class="progress-text" id="progressText">0 / 0 completed</span>
+        </div>
+        <div class="progress-bar-container" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="progress-bar" id="progressBar" style="width: 0%">0%</div>
+        </div>
+      </div>
+      
+      <section class="form-section no-print">
+        <h2>Add New Medicine</h2>
+        <form id="medicineForm" novalidate>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="name">Medicine Name *</label>
+              <input type="text" id="name" required minlength="2" placeholder="e.g., Aspirin">
+            </div>
+            
+            <div class="form-group">
+              <label for="dosage">Dosage *</label>
+              <input type="text" id="dosage" placeholder="e.g., 500mg" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="time">Scheduled Time *</label>
+              <input type="time" id="time" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="stock">Pills in Stock</label>
+              <input type="number" id="stock" placeholder="30" min="0" max="1000">
+            </div>
+            
+            <div class="form-group">
+              <label for="refillDate">Refill Date</label>
+              <input type="date" id="refillDate">
+            </div>
+            
+            <div class="form-group">
+              <label for="category">Category</label>
+              <select id="category">
+                <option value="">Select...</option>
+                <option value="blood-pressure">Blood Pressure</option>
+                <option value="diabetes">Diabetes</option>
+                <option value="pain">Pain Relief</option>
+                <option value="antibiotic">Antibiotic</option>
+                <option value="vitamin">Vitamin</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            
+            <div class="form-group full-width">
+              <label for="notes">Special Instructions</label>
+              <textarea id="notes" placeholder="e.g., Take with food, Avoid alcohol"></textarea>
+            </div>
+          
+          <button type="submit" class="btn">Add Medicine</button>
+        </form>
+      </section>
+      
+      <div class="controls-section no-print">
+        <button class="control-btn reset-btn" onclick="resetDaily()">🔄 Reset Daily</button>
+        <button class="control-btn bulk-btn" onclick="markAllTaken()">✅ Mark All Taken</button>
+        <button class="control-btn print-btn" onclick="window.print()">🖨️ Print Schedule</button>
+      </div>
+      
+      <div class="search-filter-section no-print">
+        <div class="search-grid">
+          <input type="search" class="search-input" id="searchInput" placeholder="🔍 Search medicines..." onkeyup="filterMedicines()">
+          <select class="search-input" id="sortBy" onchange="sortMedicines()">
+            <option value="time">Sort by Time</option>
+            <option value="name">Sort by Name</option>
+            <option value="status">Sort by Status</option>
+          </select>
+          <select class="search-input" id="filterCategory" onchange="filterMedicines()">
+            <option value="">All Categories</option>
+            <option value="blood-pressure">Blood Pressure</option>
+            <option value="diabetes">Diabetes</option>
+            <option value="pain">Pain Relief</option>
+            <option value="antibiotic">Antibiotic</option>
+            <option value="vitamin">Vitamin</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      
+      <section class="medicines-section">
+        <h2>Today's Medicines</h2>
+        
+        <div class="table-container">
+          <h3>📋 Medicines to Take</h3>
+          <table id="pendingTable">
+            <thead>
+              <tr>
+                <th>Medicine</th>
+                <th>Dosage</th>
+                <th>Time</th>
+                <th>Stock</th>
+                <th>Notes</th>
+                <th>Status</th>
+                <th class="no-print">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="pendingTableBody">
+              <tr><td colspan="7" style="text-align:center;padding:40px;color:#999;">No pending medicines</td></tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="table-container">
+          <h3>✅ Medicines Taken</h3>
+          <table id="takenTable">
+            <thead>
+              <tr>
+                <th>Medicine</th>
+                <th>Dosage</th>
+                <th>Scheduled</th>
+                <th>Taken At</th>
+                <th>Notes</th>
+                <th class="no-print">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="takenTableBody">
+              <tr><td colspan="6" style="text-align:center;padding:40px;color:#999;">No medicines taken yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+  <script type="module" src="tracker.js"></script>
+</body>
+</html>

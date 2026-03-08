@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View detailed reports and analytics for your medication adherence">
+  <title>Reports & Analytics - MediTrack</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="nav-header">
+    <div class="nav-container">
+      <a href="index.html" class="logo">MediTrack</a>
+      <button class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle navigation menu">☰</button>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="tracker.html">Medicine Tracker</a></li>
+        <li><a href="emergency.html">Emergency Info</a></li>
+        <li><a href="reports.html" class="active">Reports</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header class="header">
+      <h1>📊 Reports & Analytics</h1>
+      <p>Track your medication adherence and patterns</p>
+    </header>
+
+    <main class="content">
+      <!-- Summary Statistics -->
+      <section class="stats-section">
+        <div class="stat-card">
+          <span class="stat-number" id="totalMedicines">0</span>
+          <span class="stat-label">Total Medicines</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="adherenceRate">0%</span>
+          <span class="stat-label">Adherence Rate</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="missedCount">0</span>
+          <span class="stat-label">Missed Doses</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="lowStockCount">0</span>
+          <span class="stat-label">Low Stock Items</span>
+        </div>
+      </section>
+
+      <!-- Medicine List Report -->
+      <section class="form-section">
+        <h2>📋 All Medicines</h2>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Medicine Name</th>
+                <th>Dosage</th>
+                <th>Schedule Time</th>
+                <th>Category</th>
+                <th>Current Stock</th>
+                <th>Refill Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="medicineListBody">
+              <tr>
+                <td colspan="7" style="text-align:center;padding:40px;color:#999;">
+                  No medicines tracked yet. <a href="tracker.html">Add your first medicine</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Medicines by Category -->
+      <section class="form-section" style="background: #f0f8ff; border-color: #b8d4e0;">
+        <h2>📑 Medicines by Category</h2>
+        <div id="categoryReport" style="line-height: 2;"></div>
+      </section>
+
+      <!-- Upcoming Refills -->
+      <section class="form-section" style="background: #fff9e6; border-color: #f5d78e;">
+        <h2>🔔 Upcoming Refills</h2>
+        <div id="refillReport"></div>
+      </section>
+
+      <!-- Low Stock Alerts -->
+      <section class="emergency-section" id="lowStockSection" style="display: none;">
+        <h3>⚠️ Low Stock Alerts</h3>
+        <div id="lowStockReport"></div>
+      </section>
+
+      <!-- Export Options -->
+      <section class="controls-section">
+        <button class="control-btn print-btn" onclick="window.print()">🖨️ Print Report</button>
+        <button class="control-btn bulk-btn" onclick="exportToCSV()">📥 Export to CSV</button>
+      </section>
+    </main>
+
+  <script type="module">
+    // Course Outcome 3: JavaScript Fundamentals
+    let medicines = [];
+
+    // Course Outcome 3: Functions
+    function loadMedicines() {
+      try {
+        // Course Outcome 4: Browser storage
+        const saved = localStorage.getItem('medicines');
+        if (saved) {
+          medicines = JSON.parse(saved);
+          generateReports();
+        }
+      } catch (error) {
+        // Course Outcome 5: Exception handling
+        console.error('Error loading medicines:', error);
+      }
+    }
+
+    function generateReports() {
+      updateSummaryStats();
+      generateMedicineList();
+      generateCategoryReport();
+      generateRefillReport();
+      generateLowStockReport();
+    }
+
+    function updateSummaryStats() {
+      const total = medicines.length;
+      const taken = medicines.filter(m => m.taken).length;
+      
+      // Course Outcome 3: Basic expressions and operators
+      const adherenceRate = total > 0 ? Math.round((taken / total) * 100) : 0;
+      
+      // Course Outcome 3: Conditions
+      const now = new Date();
+      const currentTime = now.toTimeString().slice(0, 5);
+      const missed = medicines.filter(m => !m.taken && m.time < currentTime).length;
+      
+      // Course Outcome 3: Number literals - hexadecimal
+      const LOW_STOCK = 0x05; // 5 in hex
+      const lowStock = medicines.filter(m => m.stock > 0 && m.stock <= LOW_STOCK).length;
+      
+      // Course Outcome 4: DOM manipulation
+      document.getElementById('totalMedicines').textContent = total;
+      document.getElementById('adherenceRate').textContent = adherenceRate + '%';
+      document.getElementById('missedCount').textContent = missed;
+      document.getElementById('lowStockCount').textContent = lowStock;
+    }
+
+    function generateMedicineList() {
+      const tbody = document.getElementById('medicineListBody');
+      
+      if (medicines.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align:center;padding:40px;color:#999;">
+              No medicines tracked yet. <a href="tracker.html">Add your first medicine</a>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      // Course Outcome 3: Arrow functions and Array methods - map
+      tbody.innerHTML = medicines.map(med => {
+        const status = med.taken ? 'Taken' : 'Pending';
+        const statusClass = med.taken ? 'status-taken' : 'status-pending';
+        const LOW_STOCK = 5;
+        const lowStock = med.stock > 0 && med.stock <= LOW_STOCK;
+        
+        return `
+          <tr class="${med.taken ? 'taken-row' : ''}">
+            <td><strong>${med.name}</strong></td>
+            <td>${med.dosage}</td>
+            <td>${formatTime(med.time)}</td>
+            <td>${med.category || 'N/A'}</td>
+            <td>
+              ${med.stock > 0 ? med.stock : 'N/A'}
+              ${lowStock ? '<br><span class="status-badge status-low-stock">Low</span>' : ''}
+            </td>
+            <td>${med.refillDate ? formatDate(med.refillDate) : 'Not set'}</td>
+            <td><span class="status-badge ${statusClass}">${status}</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function generateCategoryReport() {
+      // Course Outcome 3: Array methods - reduce for grouping
+      const categories = medicines.reduce((acc, med) => {
+        const cat = med.category || 'uncategorized';
+        if (!acc[cat]) {
+          acc[cat] = [];
+        }
+        acc[cat].push(med);
+        return acc;
+      }, {});
+      
+      const reportDiv = document.getElementById('categoryReport');
+      
+      // Course Outcome 3: Object methods - Object.entries
+      if (Object.keys(categories).length === 0) {
+        reportDiv.innerHTML = '<p style="color:#999;">No medicines to categorize yet.</p>';
+        return;
+      }
+      
+      // Course Outcome 3: Template literals
+      reportDiv.innerHTML = Object.entries(categories)
+        .map(([category, meds]) => `
+          <div style="margin-bottom: 15px; padding: 15px; background: white; border-radius: 8px; border-left: 4px solid var(--primary-color);">
+            <strong style="color: var(--primary-color); font-size: 1.1em;">
+              ${formatCategoryName(category)}
+            </strong>
+            <span style="color: var(--text-secondary);"> (${meds.length} medicine${meds.length > 1 ? 's' : ''})</span>
+            <ul style="margin-top: 10px; margin-left: 20px;">
+              ${meds.map(m => `<li>${m.name} - ${m.dosage}</li>`).join('')}
+            </ul>
+          </div>
+        `).join('');
+    }
+
+    function generateRefillReport() {
+      const now = new Date();
+      const thirtyDaysLater = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+      
+      // Course Outcome 3: Array methods - filter
+      const upcomingRefills = medicines.filter(med => {
+        if (!med.refillDate) return false;
+        const refillDate = new Date(med.refillDate);
+        return refillDate >= now && refillDate <= thirtyDaysLater;
+      });
+      
+      const reportDiv = document.getElementById('refillReport');
+      
+      if (upcomingRefills.length === 0) {
+        reportDiv.innerHTML = '<p style="color:#666;">No refills needed in the next 30 days.</p>';
+        return;
+      }
+      
+      // Course Outcome 3: Array methods - sort
+      upcomingRefills.sort((a, b) => new Date(a.refillDate) - new Date(b.refillDate));
+      
+      reportDiv.innerHTML = `
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr>
+              <th style="text-align:left; padding:10px; background:#f5d78e; border:1px solid #e5c676;">Medicine</th>
+              <th style="text-align:left; padding:10px; background:#f5d78e; border:1px solid #e5c676;">Refill Date</th>
+              <th style="text-align:left; padding:10px; background:#f5d78e; border:1px solid #e5c676;">Days Until</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${upcomingRefills.map(med => {
+              const refillDate = new Date(med.refillDate);
+              const daysUntil = Math.ceil((refillDate - now) / (24 * 60 * 60 * 1000));
+              return `
+                <tr>
+                  <td style="padding:10px; border:1px solid #ddd;"><strong>${med.name}</strong></td>
+                  <td style="padding:10px; border:1px solid #ddd;">${formatDate(med.refillDate)}</td>
+                  <td style="padding:10px; border:1px solid #ddd;">${daysUntil} day${daysUntil > 1 ? 's' : ''}</td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function generateLowStockReport() {
+      const LOW_STOCK = 5;
+      const lowStockMeds = medicines.filter(m => m.stock > 0 && m.stock <= LOW_STOCK);
+      
+      const section = document.getElementById('lowStockSection');
+      const reportDiv = document.getElementById('lowStockReport');
+      
+      if (lowStockMeds.length === 0) {
+        section.style.display = 'none';
+        return;
+      }
+      
+      section.style.display = 'block';
+      reportDiv.innerHTML = `
+        <ul style="line-height: 2; margin-left: 20px;">
+          ${lowStockMeds.map(m => `
+            <li>
+              <strong>${m.name}</strong> - Only ${m.stock} pill${m.stock > 1 ? 's' : ''} remaining
+              ${m.refillDate ? ` (Refill: ${formatDate(m.refillDate)})` : ' (No refill date set)'}
+            </li>
+          `).join('')}
+        </ul>
+      `;
+    }
+
+    // Course Outcome 3: Arrow functions
+    const formatTime = (time) => {
+      const [hours, minutes] = time.split(':');
+      const hour = parseInt(hours);
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const displayHour = hour % 12 || 12;
+      return `${displayHour}:${minutes} ${ampm}`;
+    };
+
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    };
+
+    const formatCategoryName = (category) => {
+      if (category === 'uncategorized') return 'Uncategorized';
+      return category.split('-').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+      ).join(' ');
+    };
+
+    // Course Outcome 5: Export functionality
+    function exportToCSV() {
+      if (medicines.length === 0) {
+        alert('No data to export');
+        return;
+      }
+      
+      // Course Outcome 3: Array methods - map and join
+      const headers = ['Medicine Name', 'Dosage', 'Time', 'Category', 'Stock', 'Refill Date', 'Notes', 'Status'];
+      const csvContent = [
+        headers.join(','),
+        ...medicines.map(med => {
+          const status = med.taken ? 'Taken' : 'Pending';
+          return [
+            `"${med.name}"`,
+            `"${med.dosage}"`,
+            formatTime(med.time),
+            med.category || 'N/A',
+            med.stock || 0,
+            med.refillDate || 'Not set',
+            `"${med.notes || ''}"`,
+            status
+          ].join(',');
+        })
+      ].join('\n');
+      
+      // Create downloadable file
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `medicine-report-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+
+    const toggleMenu = () => {
+      const menu = document.getElementById('navMenu');
+      menu.classList.toggle('active');
+    };
+
+    // Make functions globally accessible
+    window.exportToCSV = exportToCSV;
+    window.toggleMenu = toggleMenu;
+
+    // Course Outcome 4: Event handling
+    window.addEventListener('load', loadMedicines);
+    
+    // Course Outcome 4: Storage events - update when data changes
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'medicines') {
+        loadMedicines();
+      }
+    });
+  </script>
+</body>
+</html>
